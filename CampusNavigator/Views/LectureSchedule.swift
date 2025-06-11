@@ -62,10 +62,11 @@ struct MyLectureScheduleView: View {
                                     .foregroundColor(.gray)
                             }
                             .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading) // Full width & left-aligned content
                             .background(Color(.systemGray6))
                             .cornerRadius(12)
                             .shadow(radius: 1)
-                            .padding(.horizontal)
+                            .padding(.horizontal) // This defines the card's horizontal margins from the screen edge
                         }
                     }
                     .padding(.top)
