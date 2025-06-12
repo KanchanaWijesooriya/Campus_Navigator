@@ -16,13 +16,10 @@ struct ExamResultsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    // Header with date and time
                     headerView
                     
-                    // Main results card
                     resultsCardView
                     
-                    // Additional content placeholder
                     additionalContentPlaceholder
                 }
                 .padding(.horizontal, 16)

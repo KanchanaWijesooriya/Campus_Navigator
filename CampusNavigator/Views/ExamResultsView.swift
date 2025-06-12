@@ -1,114 +1,101 @@
 import SwiftUI
 
 struct ExamResultsView: View {
-    let results: [ModuleResult] = [
-        .init(name: "PDSA 2", marks: "75"),
-        .init(name: "TSLE", marks: "84"),
-        .init(name: "Data Science", marks: "88"),
-        .init(name: "Cyber Security", marks: "75"),
-        .init(name: "DU", marks: "86"),
-        .init(name: "ECS", marks: "87"),
-        .init(name: "iOS", marks: "-"),
-        .init(name: "Web API", marks: "-")
+    let examResults = [
+        ExamResult(module: "PDSA 2", marks: 75),
+        ExamResult(module: "TSLE", marks: 84),
+        ExamResult(module: "Data Science", marks: 88),
+        ExamResult(module: "Cyber Security", marks: 75),
+        ExamResult(module: "DU", marks: 86),
+        ExamResult(module: "ECS", marks: 87),
+        ExamResult(module: "iOS", marks: nil),
+        ExamResult(module: "Web API", marks: nil)
     ]
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
+        NavigationView {
+            VStack(spacing: 20) {
+                headerSection
                 
-                // MARK: Header Section
-                HStack {
-                    Button(action: {
-                        // Action to go back
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.blue)
-                            .padding()
-                    }
-                    Spacer()
-                    Text("Exam Results")
-                        .font(.title2)
-                        .bold()
-                    Spacer()
-                    Spacer().frame(width: 44) // Placeholder for alignment
-                }
-                .padding(.top, 16)
-                
-                // MARK: Results List
-                VStack(spacing: 10) {
-                    ForEach(results, id: \.name) { result in
-                        ResultRow(result: result)
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 10)
-                .padding(.bottom, 7)
-                .background(Constants.BackgroundsGroupedSecondary)
-                .cornerRadius(10)
-                .frame(width: 370)
+                resultsList
                 
                 Spacer()
-                
-                // MARK: Footer Navigation
-                HStack {
-                    Spacer()
-                    FooterItem(title: "Map My Events")
-                    Spacer()
-                    FooterItem(title: "Home")
-                    Spacer()
-                    FooterItem(title: "Crowd Levels")
-                    Spacer()
-                    FooterItem(title: "Foods")
-                    Spacer()
-                }
-                .padding()
-                .background(Color.gray.opacity(0.1))
             }
-            .navigationTitle("") // Remove large title
-            .navigationBarTitleDisplayMode(.inline)
+            .padding(.horizontal, 16)
+            .background(Color(.systemGroupedBackground))
+            .navigationTitle("Exam Results")
+            .navigationBarTitleDisplayMode(.large)
+            .navigationBarBackButtonHidden(false)
         }
+    }
+    
+    private var headerSection: some View {
+        HStack {
+            Text("MODULE")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .fontWeight(.medium)
+            
+            Spacer()
+            
+            Text("MARKS")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .fontWeight(.medium)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 10)
+    }
+    
+    private var resultsList: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(examResults.enumerated()), id: \.offset) { index, result in
+                ExamResultRow(result: result)
+                
+                if index < examResults.count - 1 {
+                    Divider()
+                        .padding(.leading, 16)
+                }
+            }
+        }
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(10)
     }
 }
 
-// MARK: Constants
-struct Constants {
-    static let BackgroundsGroupedSecondary: Color = .white
-}
-
-// MARK: Data Model
-struct ModuleResult {
-    let name: String
-    let marks: String
-}
-
-// MARK: Row View
-struct ResultRow: View {
-    let result: ModuleResult
+struct ExamResultRow: View {
+    let result: ExamResult
     
     var body: some View {
         HStack {
-            Text(result.name)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(result.marks)
-                .frame(alignment: .trailing)
+            Text(result.module)
+                .font(.body)
+                .foregroundColor(.primary)
+            
+            Spacer()
+            
+            if let marks = result.marks {
+                Text("\(marks)")
+                    .font(.body)
+                    .foregroundColor(.primary)
+                    .fontWeight(.medium)
+            } else {
+                Text("-")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+            }
         }
-        .padding(.horizontal, 0)
-        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
     }
 }
 
-// MARK: Footer Item
-struct FooterItem: View {
-    let title: String
-    
-    var body: some View {
-        Text(title)
-            .font(.caption)
-            .foregroundColor(.blue)
-    }
+struct ExamResult {
+    let module: String
+    let marks: Int?
 }
 
-// MARK: Preview
 struct ExamResultsView_Previews: PreviewProvider {
     static var previews: some View {
         ExamResultsView()
