@@ -1,104 +1,138 @@
 import SwiftUI
 
-struct UpcomingExamsView: View {
-    // Constants for styling
-    private struct Constants {
-        static let systemLabelPrimary: Color = .black
-        static let newLoginInput: Color = Color(red: 0.96, green: 0.97, blue: 1)
-        static let newTextGray: Color = Color(red: 0.5, green: 0.51, blue: 0.57)
-        static let cardCornerRadius: CGFloat = 20
-        static let horizontalPadding: CGFloat = 16
-        static let cardHeight: CGFloat = 104
-        static let cardWidth: CGFloat = 357
-        static let spacingBetweenCards: CGFloat = 12
-    }
-    
-    // Exam data model
-    struct Exam: Identifiable {
-        let id = UUID()
-        let course: String
-        let date: String
-        let location: String
-        let time: String
-    }
-    
-    // Sample data
-    private let exams: [Exam] = [
-        Exam(course: "PDSA-2", date: "2025/08/17", location: "Auditorium", time: "1 P.M - 3 P.M"),
-        Exam(course: "TLSE", date: "2025/08/18", location: "Auditorium", time: "1 P.M - 3 P.M")
+struct ExamResultsView: View {
+    let examResults: [ExamResult] = [
+        ExamResult(module: "PDSA 2", marks: 75),
+        ExamResult(module: "TSLE", marks: 84),
+        ExamResult(module: "Data Science", marks: 88),
+        ExamResult(module: "Cyber Security", marks: 75),
+        ExamResult(module: "DU", marks: 86),
+        ExamResult(module: "ECS", marks: 87),
+        ExamResult(module: "iOS", marks: nil),
+        ExamResult(module: "Web API", marks: nil)
     ]
     
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: Constants.spacingBetweenCards) {
-                    ForEach(exams) { exam in
-                        examCard(exam: exam)
-                    }
+                VStack(spacing: 16) {
+                    // Header with date and time
+                    headerView
+                    
+                    // Main results card
+                    resultsCardView
+                    
+                    // Additional content placeholder
+                    additionalContentPlaceholder
                 }
-                .padding(.horizontal, Constants.horizontalPadding)
-                .padding(.top, 20)
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
             }
-            .navigationTitle("Upcoming Exams")
+            .navigationTitle("Exam Results")
             .navigationBarTitleDisplayMode(.large)
             .background(Color(.systemGroupedBackground))
         }
     }
     
-    // Reusable exam card component
-    private func examCard(exam: Exam) -> some View {
-        ZStack {
-            // Card background
-            RoundedRectangle(cornerRadius: Constants.cardCornerRadius)
-                .fill(Constants.newLoginInput)
-                .frame(width: Constants.cardWidth, height: Constants.cardHeight)
-            
-            // Card content
-            VStack(alignment: .leading, spacing: 8) {
-                // Course name
-                Text(exam.course)
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(Constants.systemLabelPrimary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+    private var headerView: some View {
+        HStack {
+            Spacer()
+            VStack(alignment: .trailing, spacing: 4) {
+                Text(Date.now.formatted(date: .abbreviated, time: .omitted))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Text(Date.now.formatted(date: .omitted, time: .shortened))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            .padding(10)
+            .background(Color(.systemBackground))
+            .cornerRadius(8)
+        }
+    }
+    
+    private var resultsCardView: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(examResults) { result in
+                ExamResultRow(result: result)
                 
-                // Date
-                Text(exam.date)
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(Constants.newTextGray)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                HStack(spacing: 16) {
-                    // Location
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Location")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(Constants.newTextGray)
-                        Text(exam.location)
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(Constants.systemLabelPrimary)
-                    }
-                    
-                    // Time
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Time")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(Constants.newTextGray)
-                        Text(exam.time)
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(Constants.newTextGray)
-                    }
+                if result.id != examResults.last?.id {
+                    Divider()
+                        .padding(.leading, 16)
                 }
             }
-            .padding(.horizontal, 16)
-            .frame(width: Constants.cardWidth, height: Constants.cardHeight, alignment: .topLeading)
+        }
+        .background(Color(.systemBackground))
+        .cornerRadius(10)
+    }
+    
+    private var additionalContentPlaceholder: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Additional Information")
+                .font(.headline)
+                .padding(16)
+            
+            Divider()
+            
+            VStack(spacing: 16) {
+                Text("Map")
+                Text("My Events")
+                Text("Home")
+                Text("Crowd Levels")
+                Text("Foods")
+            }
+            .padding(16)
+        }
+        .background(Color(.systemBackground))
+        .cornerRadius(10)
+    }
+}
+
+struct ExamResultRow: View {
+    let result: ExamResult
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 0) {
+            Text(result.module)
+                .font(.body)
+                .padding(.vertical, 14)
+                .padding(.leading, 16)
+            
+            Spacer()
+            
+            if let marks = result.marks {
+                Text("\(marks)")
+                    .font(.body.monospacedDigit())
+                    .foregroundColor(marksColor(marks: marks))
+                    .padding(.trailing, 16)
+            } else {
+                Text("-")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .padding(.trailing, 16)
+            }
+        }
+    }
+    
+    private func marksColor(marks: Int) -> Color {
+        switch marks {
+        case 0..<50: return .red
+        case 50..<70: return .orange
+        case 70..<90: return .green
+        case 90...100: return .blue
+        default: return .primary
         }
     }
 }
 
-// Preview provider
-struct UpcomingExamsView_Previews: PreviewProvider {
-    static var previews: some View {
-        UpcomingExamsView()
-    }
+struct ExamResult: Identifiable {
+    let id = UUID()
+    let module: String
+    let marks: Int?
 }
 
+struct ExamResultsView_Previews: PreviewProvider {
+    static var previews: some View {
+        ExamResultsView()
+    }
+}
