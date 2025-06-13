@@ -1,81 +1,133 @@
 import SwiftUI
 
+// MARK: - Constants
+struct Constants {
+    static let LabelsPrimary: Color = .black
+    static let newTextGray: Color = Color(red: 0.5, green: 0.51, blue: 0.57)
+}
+
+// MARK: - HomeView
 struct HomeView: View {
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-
-                    // Header with Title and Profile Picture
-                    HStack {
-                        Text("Campus Navigator")
-                            .font(.title)
-                            .bold()
-
-                        Spacer()
-
-                        Image("profilePic") // Replace with your asset name
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.gray.opacity(0.3), lineWidth: 1))
+            VStack(spacing: 24) {
+                
+                // Top Navigation Bar
+                HStack {
+                    Button(action: {}) {
+                        Text("Back")
+                            .foregroundColor(.blue)
                     }
-                    .padding(.top)
-                    .frame(maxWidth: .infinity)
 
-                    // Cards Section
-                    VStack(spacing: 16) {
-                        HomeTile(title: "View Campus Map", subtitle: "Explore buildings, departments, and wayfinding.")
-                        HomeTile(title: "Check Crowd Levels", subtitle: "Live density data for libraries, cafeterias, gyms.")
-                        HomeTile(title: "Reserve a Space", subtitle: "Book study rooms, labs, parking slots.")
-                        HomeTile(title: "My Timetable", subtitle: "Explore buildings, departments, and wayfinding.")
-                        HomeTile(title: "Exams and Results", subtitle: "Repeat exams, module results, and upcoming exams.")
-                    }
+                    Spacer()
+
+                    Text("Home")
+                        .font(.custom("Inter", size: 17).weight(.semibold))
+                        .foregroundColor(Constants.LabelsPrimary)
+
+                    Spacer()
+
+                    Image("profile-icon") // <- ADD to Assets
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                        .background(Constants.newTextGray)
+                        .clipShape(Circle())
                 }
-                .padding()
-            }
-        }
-    }
-}
+                .padding(.horizontal)
+                .padding(.top)
 
-struct HomeTile: View {
-    var title: String
-    var subtitle: String
-    
-    var body: some View {
-        Button(action: {
-            // Placeholder for future navigation
-        }) {
-            HStack(alignment: .top, spacing: 16) {
-                Rectangle() // Placeholder for icon
-                    .frame(width: 50, height: 50)
-                    .cornerRadius(10)
-                    .foregroundColor(.gray.opacity(0.3))
+                // App Title
+                Text("Campus Navigator")
+                    .font(.custom("Inter", size: 32).weight(.bold))
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                // Feature Cards
+                VStack(spacing: 16) {
+                    FeatureCard(iconName: "map-icon", title: "View Campus Map", description: "Explore buildings, departments, and wayfinding.")
+                    FeatureCard(iconName: "crowd-icon", title: "Check Crowd Levels", description: "Live density data for libraries, cafeterias, gyms.")
+                    FeatureCard(iconName: "reserve-icon", title: "Reserve a Space", description: "Book study rooms, labs, parking slots.")
+                    FeatureCard(iconName: "timetable-icon", title: "My Timetable", description: "Explore buildings, departments, and wayfinding.")
+                    FeatureCard(iconName: "exam-icon", title: "Exams and Results", description: "Repeat exams, module results, and upcoming exams.")
                 }
+                .padding(.horizontal)
 
                 Spacer()
+
+                // Bottom Tab Bar (Placeholder)
+                HStack {
+                    TabBarIcon(name: "Map")
+                    TabBarIcon(name: "My Events")
+                    TabBarIcon(name: "Home", isSelected: true)
+                    TabBarIcon(name: "Crowd Levels")
+                    TabBarIcon(name: "Foods")
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 12)
             }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
         }
     }
 }
 
+// MARK: - Feature Card
+struct FeatureCard: View {
+    var iconName: String
+    var title: String
+    var description: String
+
+    var body: some View {
+        HStack(spacing: 16) {
+            // Icon
+            Image(iconName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 32, height: 32) // Balanced size
+                .padding(.top, 12)
+                .padding(.leading, 12)
+
+            // Text Block
+            VStack(alignment: .leading, spacing: 6) {
+                Text(title)
+                    .font(.custom("Inter", size: 17).weight(.semibold))
+                    .foregroundColor(.black)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text(description)
+                    .font(.custom("Inter", size: 15))
+                    .foregroundColor(Constants.newTextGray)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.vertical, 12)
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 0.87, green: 0.87, blue: 0.87).opacity(0.7))
+        .cornerRadius(8)
+        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 2)
+        .frame(width: 351, height: 92)
+    }
+}
+
+// MARK: - Bottom Tab Bar Icon
+struct TabBarIcon: View {
+    var name: String
+    var isSelected: Bool = false
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Image(systemName: isSelected ? "house.fill" : "house") // Replace with custom tab icons if needed
+                .font(.title2)
+            Text(name)
+                .font(.caption)
+        }
+        .frame(maxWidth: .infinity)
+        .foregroundColor(isSelected ? .blue : .gray)
+    }
+}
+
+// MARK: - Preview
 #Preview {
     HomeView()
 }
-
