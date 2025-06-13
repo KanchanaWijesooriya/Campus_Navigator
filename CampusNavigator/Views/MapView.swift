@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct MapPage: View {
+struct MapView: View {
     @State private var showFloorSelector = false
     @State private var selectedFloor = "None"
 
@@ -65,8 +65,10 @@ struct MapPage: View {
     }
 }
 
-#Preview {
-    MapPage()
+struct MapView_Previews: PreviewProvider {
+    static var previews: some View {
+        MapView()
+    }
 }
 
 
