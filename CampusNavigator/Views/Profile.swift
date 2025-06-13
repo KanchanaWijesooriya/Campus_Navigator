@@ -132,6 +132,8 @@ struct ImagePicker: UIViewControllerRepresentable {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView()
+        Group {
+            ProfileView()
+        }
     }
 }

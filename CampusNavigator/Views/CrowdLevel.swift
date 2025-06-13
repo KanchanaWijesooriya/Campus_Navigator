@@ -4,6 +4,7 @@
 //
 //  Created by Geeneth on 2025-06-13.
 //
+
 import SwiftUI
 import Charts
 
@@ -23,7 +24,7 @@ enum CrowdLevel: String, Codable, CaseIterable, Identifiable {
     }
 }
 
-// MARK: - Area Enum
+// MARK: - CampusArea Enum
 enum CampusArea: String, CaseIterable, Identifiable {
     case cafeteria = "Cafeteria"
     case library = "Library"
@@ -32,7 +33,7 @@ enum CampusArea: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-// MARK: - Crowd Data
+// MARK: - CrowdData Model
 struct CrowdData: Identifiable, Codable {
     var id = UUID()
     let date: Date
@@ -51,36 +52,60 @@ class CrowdViewModel: ObservableObject {
     }
 
     func vote(level: CrowdLevel) {
-        let today = Calendar.current.startOfDay(for: Date())
-        votes[selectedArea, default: []].append(CrowdData(date: today, level: level))
+        let now = Date()
+        votes[selectedArea, default: []].append(CrowdData(date: now, level: level))
     }
 
-    func dataForLast7Days() -> [Date: [CrowdLevel: Int]] {
+    func hourlyDataForToday() -> [Int: [CrowdLevel: Int]] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        let last7Days = (0..<7).map { calendar.date(byAdding: .day, value: -$0, to: today)! }
 
-        var result: [Date: [CrowdLevel: Int]] = [:]
-        for date in last7Days {
-            let dayVotes = votes[selectedArea, default: []].filter {
-                calendar.isDate($0.date, inSameDayAs: date)
+        let todayVotes = votes[selectedArea, default: []].filter {
+            calendar.isDate($0.date, inSameDayAs: today)
+        }
+
+        var hourlyData: [Int: [CrowdLevel: Int]] = [:]
+
+        for hour in 0..<24 {
+            let hourVotes = todayVotes.filter {
+                calendar.component(.hour, from: $0.date) == hour
             }
+
             var levelCount: [CrowdLevel: Int] = [:]
             for level in CrowdLevel.allCases {
-                levelCount[level] = dayVotes.filter { $0.level == level }.count
+                levelCount[level] = hourVotes.filter { $0.level == level }.count
             }
-            result[date] = levelCount
+            hourlyData[hour] = levelCount
         }
-        return result
+
+        return hourlyData
+    }
+
+    var currentCrowdLevel: CrowdLevel? {
+        let now = Date()
+        let calendar = Calendar.current
+        let currentHour = calendar.component(.hour, from: now)
+
+        let hourVotes = votes[selectedArea, default: []].filter {
+            calendar.isDate($0.date, inSameDayAs: now) &&
+            calendar.component(.hour, from: $0.date) == currentHour
+        }
+
+        let levelCount = Dictionary(grouping: hourVotes, by: { $0.level })
+            .mapValues { $0.count }
+
+        return levelCount.max(by: { $0.value < $1.value })?.key
     }
 
     private func generateRandomData() -> [CrowdData] {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        return (0..<7).flatMap { offset -> [CrowdData] in
-            let date = calendar.date(byAdding: .day, value: -offset, to: today)!
-            return (0..<Int.random(in: 5...15)).map { _ in
-                CrowdData(date: date, level: CrowdLevel.allCases.randomElement()!)
+        let now = Date()
+        return (0..<7).flatMap { dayOffset -> [CrowdData] in
+            let date = calendar.date(byAdding: .day, value: -dayOffset, to: now)!
+            return (0..<Int.random(in: 10...20)).map { _ in
+                let randomHour = Int.random(in: 0..<24)
+                let randomDate = calendar.date(bySettingHour: randomHour, minute: 0, second: 0, of: date)!
+                return CrowdData(date: randomDate, level: CrowdLevel.allCases.randomElement()!)
             }
         }
     }
@@ -89,10 +114,12 @@ class CrowdViewModel: ObservableObject {
 // MARK: - Main View
 struct CrowdLevelsView: View {
     @StateObject private var viewModel = CrowdViewModel()
+    @State private var showReportAlert = false
 
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
+                // Area Picker
                 Picker("Select Area", selection: $viewModel.selectedArea) {
                     ForEach(CampusArea.allCases) { area in
                         Text(area.rawValue).tag(area)
@@ -101,13 +128,23 @@ struct CrowdLevelsView: View {
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
 
+                // Current Crowd Level
+                if let currentLevel = viewModel.currentCrowdLevel {
+                    Text("Current Crowd Level: \(currentLevel.emoji) \(currentLevel.rawValue)")
+                        .font(.title2)
+                        .padding(.top)
+                } else {
+                    Text("No data for current level yet.")
+                        .foregroundColor(.gray)
+                }
+
+                // Chart View
                 Chart {
-                    ForEach(viewModel.dataForLast7Days().sorted(by: { $0.key < $1.key }), id: \ .key) { date, levelCounts in
+                    ForEach(viewModel.hourlyDataForToday().sorted(by: { $0.key < $1.key }), id: \.key) { hour, levelCounts in
                         ForEach(CrowdLevel.allCases) { level in
                             BarMark(
-                                x: .value("Day", date, unit: .day),
-                                y: .value("Votes", levelCounts[level] ?? 0),
-                                stacking: .normalized
+                                x: .value("Hour", "\(hour):00"),
+                                y: .value("Votes", levelCounts[level] ?? 0)
                             )
                             .foregroundStyle(by: .value("Level", level.rawValue))
                         }
@@ -116,6 +153,7 @@ struct CrowdLevelsView: View {
                 .frame(height: 300)
                 .padding()
 
+                // Voting
                 Text("Vote Crowd Level")
                     .font(.headline)
 
@@ -130,6 +168,21 @@ struct CrowdLevelsView: View {
                     }
                 }
                 .padding()
+
+                // Report Button
+                Button(action: {
+                    showReportAlert = true
+                }) {
+                    Text("Report Fake Crowd Level")
+                        .font(.subheadline)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                }
+                .alert("Report Submitted", isPresented: $showReportAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text("Thank you. Your report has been submitted.")
+                }
 
                 Spacer()
             }

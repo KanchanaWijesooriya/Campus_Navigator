@@ -52,7 +52,7 @@ struct MapView: View {
                         .cornerRadius(12)
                         .padding(.horizontal)
                 }
-                .padding(.bottom, 40)
+                .padding(.bottom, 100)
                 .confirmationDialog("Select a Floor", isPresented: $showFloorSelector, titleVisibility: .visible) {
                     Button("Ground") { selectedFloor = "Ground" }
                     Button("First Floor") { selectedFloor = "First Floor" }

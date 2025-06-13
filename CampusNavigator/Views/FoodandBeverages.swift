@@ -60,9 +60,38 @@ class CartManager: ObservableObject {
     }
 }
 
+// MARK: - User Credits Manager
+class UserCreditsManager: ObservableObject {
+    @Published var credits: Double {
+        didSet {
+            UserDefaults.standard.set(credits, forKey: "user_credits")
+        }
+    }
+
+    init() {
+        self.credits = UserDefaults.standard.double(forKey: "user_credits")
+        if credits == 0 {
+            credits = 50.00 // Initial credit
+        }
+    }
+
+    func deduct(_ amount: Double) -> Bool {
+        if credits >= amount {
+            credits -= amount
+            return true
+        }
+        return false
+    }
+
+    func add(_ amount: Double) {
+        credits += amount
+    }
+}
+
 // MARK: - Cart View
 struct CartView: View {
     @ObservedObject var cartManager: CartManager
+    @ObservedObject var creditsManager: UserCreditsManager
 
     var total: Double {
         cartManager.items.reduce(0) { $0 + $1.price * Double($1.quantity) }
@@ -70,6 +99,11 @@ struct CartView: View {
 
     var body: some View {
         VStack {
+            Text("Credits: $\(creditsManager.credits, specifier: "%.2f")")
+                .font(.subheadline)
+                .foregroundColor(.blue)
+                .padding(.top)
+
             if cartManager.items.isEmpty {
                 Text("Your cart is empty.")
                     .font(.title3)
@@ -77,17 +111,17 @@ struct CartView: View {
                     .padding()
             } else {
                 List {
-                    ForEach(cartManager.items, id: \.self) { item in
+                    ForEach(cartManager.items, id: \ .self) { item in
                         HStack {
                             VStack(alignment: .leading) {
                                 Text(item.name)
                                     .font(.headline)
-                                Text("Qty: \(item.quantity) x $\(String(format: "%.2f", item.price))")
+                                Text("Qty: \(item.quantity) x $\(item.price, specifier: "%.2f")")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
                             Spacer()
-                            Text(String(format: "$%.2f", Double(item.quantity) * item.price))
+                            Text("$\(Double(item.quantity) * item.price, specifier: "%.2f")")
                         }
                     }
                     .onDelete { indexSet in
@@ -102,19 +136,22 @@ struct CartView: View {
                     Text("Total:")
                         .font(.headline)
                     Spacer()
-                    Text(String(format: "$%.2f", total))
+                    Text("$\(total, specifier: "%.2f")")
                         .font(.title3)
                         .fontWeight(.bold)
                 }
                 .padding()
 
                 Button("Checkout") {
-                    cartManager.clearCart()
+                    if creditsManager.deduct(total) {
+                        cartManager.clearCart()
+                    }
                 }
+                .disabled(total > creditsManager.credits)
                 .font(.headline)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.green)
+                .background(total > creditsManager.credits ? Color.gray : Color.green)
                 .foregroundColor(.white)
                 .cornerRadius(12)
                 .padding([.horizontal, .bottom])
@@ -127,6 +164,7 @@ struct CartView: View {
 // MARK: - Main Menu View
 struct FoodBeveragesView: View {
     @ObservedObject var cartManager: CartManager
+    @ObservedObject var creditsManager = UserCreditsManager()
 
     @State private var items: [FoodItem] = [
         FoodItem(id: UUID(), name: "Cheeseburger", imageName: "burger", price: 5.99, quantity: 0),
@@ -147,9 +185,14 @@ struct FoodBeveragesView: View {
     var body: some View {
         NavigationView {
             VStack {
+                Text("Credits: $\(creditsManager.credits, specifier: "%.2f")")
+                    .font(.subheadline)
+                    .foregroundColor(.blue)
+                    .padding(.top)
+
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(items.indices, id: \.self) { index in
+                        ForEach(items.indices, id: \ .self) { index in
                             HStack(spacing: 16) {
                                 Image(items[index].imageName)
                                     .resizable()
@@ -188,17 +231,17 @@ struct FoodBeveragesView: View {
                             for item in selectedItems {
                                 cartManager.addToCart(item)
                             }
-                            // Reset quantities
                             items = items.map {
                                 var updated = $0
                                 updated.quantity = 0
                                 return updated
                             }
                         }
+                        .disabled(totalSelectedPrice > creditsManager.credits)
                         .font(.headline)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.blue)
+                        .background(totalSelectedPrice > creditsManager.credits ? Color.gray : Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                         .padding(.horizontal)
@@ -208,7 +251,7 @@ struct FoodBeveragesView: View {
             }
             .navigationTitle("Foods & Beverages")
             .toolbar {
-                NavigationLink(destination: CartView(cartManager: cartManager)) {
+                NavigationLink(destination: CartView(cartManager: cartManager, creditsManager: creditsManager)) {
                     Label("Cart", systemImage: "cart")
                 }
             }
