@@ -4,24 +4,6 @@ struct ExamsAndResultsView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Header
-                HStack {
-                    Button(action: {
-                        // Back action
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(.blue)
-                            Text("Back")
-                                .font(.system(size: 17))
-                                .foregroundColor(.blue)
-                        }
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 8)
                 
                 // Title
                 HStack {
@@ -31,7 +13,7 @@ struct ExamsAndResultsView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 8)
+                .padding(.top, 24)
                 .padding(.bottom, 24)
                 
                 // Content Grid
@@ -39,48 +21,52 @@ struct ExamsAndResultsView: View {
                     GridItem(.flexible(), spacing: 16),
                     GridItem(.flexible(), spacing: 16)
                 ], spacing: 16) {
+//                    NavigationLink(destination: ){
+                        ExamCard(
+                            imageName: "RepeatExamIcon",
+                            title: "Repeat exams",
+                            subtitle: "View to apply repeat exams and download...",
+                            backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
+                        )
+//                    }
                     
-                    // Repeat exams card
-                    ExamCard(
-                        imageName: "RepeatExamIcon", // You'll add this to Assets
-                        title: "Repeat exams",
-                        subtitle: "View to apply repeat exams and download...",
-                        backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
-                    )
+//                    NavigationLink(destination: ){
+                        ExamCard(
+                            imageName: "UpcomingExamIcon",
+                            title: "Upcoming exams",
+                            subtitle: "Check your exam schedule with module...",
+                            backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
+                        )
+//                    }
                     
-                    // Upcoming exams card
-                    ExamCard(
-                        imageName: "UpcomingExamIcon", // You'll add this to Assets
-                        title: "Upcoming exams",
-                        subtitle: "Check your exam schedule with module...",
-                        backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
-                    )
+                    NavigationLink(destination: ExamResultsView()) {
+                        ExamCard(
+                            imageName: "ExamResultsIcon",
+                            title: "Exam results",
+                            subtitle: "View your latest results for each module...",
+                            backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
+                        )
+                    }
                     
-                    // Exam results card
-                    ExamCard(
-                        imageName: "ExamResultsIcon", // You'll add this to Assets
-                        title: "Exam results",
-                        subtitle: "View your latest results for each module...",
-                        backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
-                    )
-                    
-                    // Exam Schedule card
-                    ExamCard(
-                        imageName: "ExamScheduleIcon", // You'll add this to Assets
-                        title: "Exam Schedule",
-                        subtitle: "View updated exam schedules",
-                        backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
-                    )
+//                    NavigationLink(destination: ){
+                        ExamCard(
+                            imageName: "ExamScheduleIcon",
+                            title: "Exam Schedule",
+                            subtitle: "View updated exam schedules",
+                            backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
+                        )
+//                    }
                 }
                 .padding(.horizontal, 16)
                 
                 Spacer()
             }
             .background(Color.white)
+            .navigationBarHidden(true)
         }
-        .navigationBarHidden(true)
     }
 }
+
 
 struct ExamCard: View {
     let imageName: String

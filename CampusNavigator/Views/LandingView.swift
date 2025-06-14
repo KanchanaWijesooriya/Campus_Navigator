@@ -38,12 +38,20 @@ struct LaningView: View {
                     // Feature Icon Grid
                     VStack(spacing: 16) {
                         HStack(spacing: 16) {
-                            FeatureButton(title: "View Campus Map", iconName: "map-icon", description: "Explore buildings, departments, and wayfinding.")
-                            FeatureButton(title: "Check Crowd Levels", iconName: "crowd-icon", description: "Live density data for libraries, cafeterias, gyms.")
+                            NavigationLink(destination: MapView()){
+                                FeatureButton(title: "View Campus Map", iconName: "map-icon", description: "Explore buildings, departments, and wayfinding.")
+                            }
+                            NavigationLink(destination: CrowdLevelsView()){
+                                FeatureButton(title: "Check Crowd Levels", iconName: "crowd-icon", description: "Live density data for libraries, cafeterias, gyms.")
+                            }
                         }
                         HStack(spacing: 16) {
-                            FeatureButton(title: "Reserve a Space", iconName: "reserve-icon", description: "Book study rooms, labs, parking slots.")
-                            FeatureButton(title: "Exams and Results", iconName: "exam-icon", description: "Check your results and exam schedules.")
+                            NavigationLink(destination: ReserveSpacePage()){
+                                FeatureButton(title: "Reserve a Space", iconName: "reserve-icon", description: "Book study rooms, labs, parking slots.")
+                            }
+                            NavigationLink(destination: ExamsAndResultsView()){
+                                FeatureButton(title: "Exams and Results", iconName: "exam-icon", description: "Check your results and exam schedules.")
+                            }
                         }
                     }
                     .padding(.horizontal)
