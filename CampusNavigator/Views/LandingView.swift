@@ -1,15 +1,19 @@
 import SwiftUI
 
-struct LaningView: View {
+struct LandingView: View {
+    @State private var currentTab = 0
+    private let banners = ["event_banner1", "event_banner2", "event_banner3"]
+    private let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .center, spacing: 38) {
-                    
+                VStack(alignment: .center, spacing: 32) {
+
                     // Greeting Header
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Hi, Geeneth")
+                            Text("Hi, Devmi")
                                 .font(.title)
                                 .fontWeight(.bold)
                             Text("Welcome to Campus Navigator")
@@ -17,49 +21,71 @@ struct LaningView: View {
                                 .foregroundColor(.gray)
                         }
                         Spacer()
-                        Image("profile_picture") // Add this to Assets
+                        Image("profile_picture") // Add to Assets
                             .resizable()
                             .frame(width: 50, height: 50)
                             .clipShape(Circle())
                     }
                     .padding(.horizontal)
-                    
-                    // Upcoming Events Carousel
-                    TabView {
-                        Image("event_banner") // Example banner image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .cornerRadius(10)
-                    }
-                    .frame(height: 150)
-                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-                    .padding(.horizontal)
 
-                    // Feature Icon Grid
-                    VStack(spacing: 16) {
-                        HStack(spacing: 16) {
-                            NavigationLink(destination: MapView()){
-                                FeatureButton(title: "View Campus Map", iconName: "map-icon", description: "Explore buildings, departments, and wayfinding.")
-                            }
-                            NavigationLink(destination: CrowdLevelsView()){
-                                FeatureButton(title: "Check Crowd Levels", iconName: "crowd-icon", description: "Live density data for libraries, cafeterias, gyms.")
-                            }
-                        }
-                        HStack(spacing: 16) {
-                            NavigationLink(destination: ReserveSpacePage()){
-                                FeatureButton(title: "Reserve a Space", iconName: "reserve-icon", description: "Book study rooms, labs, parking slots.")
-                            }
-                            NavigationLink(destination: ExamsAndResultsView()){
-                                FeatureButton(title: "Exams and Results", iconName: "exam-icon", description: "Check your results and exam schedules.")
-                            }
+                    // Upcoming Events Carousel
+                    TabView(selection: $currentTab) {
+                        ForEach(0..<banners.count, id: \.self) { index in
+                            Image(banners[index])
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(height: 150)
+                                .clipped()
+                                .cornerRadius(10)
+                                .padding(.horizontal, 20)
+                                .tag(index)
                         }
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 36)
-                    .padding(.bottom, 18)
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                    .frame(height: 160)
+                    .onReceive(timer) { _ in
+                        withAnimation {
+                            currentTab = (currentTab + 1) % banners.count
+                        }
+                    }
+
+                    // Explore App Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Explore App...")
+                            .font(.headline)
+                            .padding(.leading)
+
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
+                            FeatureButton(
+                                title: "View Campus Map",
+                                iconName: "map-icon",
+                                description: "Explore buildings, departments, and wayfinding."
+                            )
+                            FeatureButton(
+                                title: "Check Crowd Levels",
+                                iconName: "crowd-icon",
+                                description: "Live density data for libraries, cafeterias, gyms."
+                            )
+                            FeatureButton(
+                                title: "Reserve a Space",
+                                iconName: "reserve-icon",
+                                description: "Book study rooms, labs, parking slots."
+                            )
+                            FeatureButton(
+                                title: "Exams and Results",
+                                iconName: "exam-icon",
+                                description: "Check your results and exam schedules."
+                            )
+                        }
+                        .padding(.horizontal)
+                    }
+                    .padding(.vertical)
                     .background(Color(red: 0.87, green: 0.87, blue: 0.87).opacity(0.7))
                     .cornerRadius(10)
                     .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
+                    .padding(.horizontal)
+
+                    Spacer()
                 }
                 .padding(.top)
             }
@@ -75,20 +101,26 @@ struct FeatureButton: View {
     var description: String
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             Image(iconName)
                 .resizable()
-                .scaledToFit()
-                .frame(width: 40, height: 40)
+                .frame(width: 40, height: 38)
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.gray.opacity(0.4), lineWidth: 2)
+                )
+
             Text(title)
                 .font(.headline)
                 .multilineTextAlignment(.center)
+
             Text(description)
                 .font(.caption)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.gray)
+                .frame(maxHeight: 40) // prevents stretching from longer descriptions
         }
-        .frame(width: 150, height: 160) // Set fixed size for each box
+        .frame(width: 130, height: 150)
         .padding()
         .background(Color.white)
         .cornerRadius(12)
@@ -96,6 +128,7 @@ struct FeatureButton: View {
     }
 }
 
+
 #Preview{
-    LaningView()
+    LandingView()
 }

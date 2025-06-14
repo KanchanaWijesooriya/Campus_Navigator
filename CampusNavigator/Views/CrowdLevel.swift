@@ -10,8 +10,8 @@ import Charts
 
 // MARK: - CrowdLevel Enum
 enum CrowdLevel: String, Codable, CaseIterable, Identifiable {
-    case happy = "Happy"
-    case neutral = "Neutral"
+    case happy = "Good to Go!"
+    case neutral = ""
     case sad = "Sad"
 
     var id: String { rawValue }
