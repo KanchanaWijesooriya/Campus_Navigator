@@ -15,12 +15,12 @@ struct MainTabView: View {
                     Label("Map", systemImage: "map")
                 }
 
-            ProfileView()
+            NewsFeedView()
                 .tabItem {
                     Label("My Events", systemImage: "calendar")
                 }
 
-            LaningView() // Or replace with ProfileView() if needed
+            LandingView() // Or replace with ProfileView() if needed
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }

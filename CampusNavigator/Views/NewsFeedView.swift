@@ -27,23 +27,23 @@ struct NewsFeedView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     // Header
-                    HStack {
-                        Button(action: {
-                            // Back action
-                        }) {
-                            HStack(spacing: 4) {
-                                Image(systemName: "chevron.left")
-                                    .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(.blue)
-                                Text("Back")
-                                    .font(.system(size: 17))
-                                    .foregroundColor(.blue)
-                            }
-                        }
-                        Spacer()
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
+//                    HStack {
+//                        Button(action: {
+//                            // Back action
+//                        }) {
+//                            HStack(spacing: 4) {
+//                                Image(systemName: "chevron.left")
+//                                    .font(.system(size: 16, weight: .medium))
+//                                    .foregroundColor(.blue)
+//                                Text("Back")
+//                                    .font(.system(size: 17))
+//                                    .foregroundColor(.blue)
+//                            }
+//                        }
+//                        Spacer()
+//                    }
+//                    .padding(.horizontal, 16)
+//                    .padding(.top, 8)
                     
                     // Title
                     HStack {
@@ -101,22 +101,26 @@ struct NewsFeedView: View {
                                 )
                                 
                                 // Talent Show 2025 Card
-                                NewsCard(
-                                    imageName: "talent_show_image", // You'll add this to Assets
-                                    title: "Talent Show 2025",
-                                    subtitle: "Talent Show 2025 News and updates ...",
-                                    imageHeight: 118,
-                                    cardWidth: 175
-                                )
+                                NavigationLink(destination: TalentShowView()){
+                                    NewsCard(
+                                        imageName: "talent_show_image", // You'll add this to Assets
+                                        title: "Talent Show 2025",
+                                        subtitle: "Talent Show 2025 News and updates ...",
+                                        imageHeight: 118,
+                                        cardWidth: 175
+                                    )
+                                }
                                 
                                 // Talent Show 2025 Card
-                                NewsCard(
-                                    imageName: "talent_show_image", // You'll add this to Assets
-                                    title: "Talent Show 2025",
-                                    subtitle: "Talent Show 2025 News and updates ...",
-                                    imageHeight: 118,
-                                    cardWidth: 175
-                                )
+                                NavigationLink(destination: TalentShowView()){
+                                    NewsCard(
+                                        imageName: "talent_show_image", // You'll add this to Assets
+                                        title: "Talent Show 2025",
+                                        subtitle: "Talent Show 2025 News and updates ...",
+                                        imageHeight: 118,
+                                        cardWidth: 175
+                                    )
+                                }
                             }
                             
                         }

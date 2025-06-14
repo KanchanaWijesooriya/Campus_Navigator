@@ -21,23 +21,23 @@ struct ExamsAndResultsView: View {
                     GridItem(.flexible(), spacing: 16),
                     GridItem(.flexible(), spacing: 16)
                 ], spacing: 16) {
-//                    NavigationLink(destination: ){
+                    NavigationLink(destination: RepeatExamView()){
                         ExamCard(
                             imageName: "RepeatExamIcon",
                             title: "Repeat exams",
                             subtitle: "View to apply repeat exams and download...",
                             backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
                         )
-//                    }
+                    }
                     
-//                    NavigationLink(destination: ){
+                    NavigationLink(destination: UpcomingExamsView()){
                         ExamCard(
                             imageName: "UpcomingExamIcon",
                             title: "Upcoming exams",
                             subtitle: "Check your exam schedule with module...",
                             backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
                         )
-//                    }
+                    }
                     
                     NavigationLink(destination: ExamResultsView()) {
                         ExamCard(

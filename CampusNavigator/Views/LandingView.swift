@@ -21,10 +21,12 @@ struct LandingView: View {
                                 .foregroundColor(.gray)
                         }
                         Spacer()
-                        Image("profile_picture") // Add to Assets
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
+                        NavigationLink(destination: ProfileView()){
+                            Image("profile_picture") // Add to Assets
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .clipShape(Circle())
+                        }
                     }
                     .padding(.horizontal)
 
@@ -56,26 +58,34 @@ struct LandingView: View {
                             .padding(.leading)
 
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-                            FeatureButton(
-                                title: "View Campus Map",
-                                iconName: "map-icon",
-                                description: "Explore buildings, departments, and wayfinding."
-                            )
-                            FeatureButton(
-                                title: "Check Crowd Levels",
-                                iconName: "crowd-icon",
-                                description: "Live density data for libraries, cafeterias, gyms."
-                            )
-                            FeatureButton(
-                                title: "Reserve a Space",
-                                iconName: "reserve-icon",
-                                description: "Book study rooms, labs, parking slots."
-                            )
-                            FeatureButton(
-                                title: "Exams and Results",
-                                iconName: "exam-icon",
-                                description: "Check your results and exam schedules."
-                            )
+                            NavigationLink(destination: MapView()){
+                                FeatureButton(
+                                    title: "View Campus Map",
+                                    iconName: "map-icon",
+                                    description: "Explore buildings, departments, and wayfinding."
+                                )
+                            }
+                            NavigationLink(destination: CrowdLevelsView()){
+                                FeatureButton(
+                                    title: "Check Crowd Levels",
+                                    iconName: "crowd-icon",
+                                    description: "Live density data for libraries, cafeterias, gyms."
+                                )
+                            }
+                            NavigationLink(destination: ReserveSpacePage()){
+                                FeatureButton(
+                                    title: "Reserve a Space",
+                                    iconName: "reserve-icon",
+                                    description: "Book study rooms, labs, parking slots."
+                                )
+                            }
+                            NavigationLink(destination: ExamsAndResultsView()){
+                                FeatureButton(
+                                    title: "Exams and Results",
+                                    iconName: "exam-icon",
+                                    description: "Check your results and exam schedules."
+                                )
+                            }
                         }
                         .padding(.horizontal)
                     }
@@ -120,7 +130,7 @@ struct FeatureButton: View {
                 .foregroundColor(.gray)
                 .frame(maxHeight: 40) // prevents stretching from longer descriptions
         }
-        .frame(width: 130, height: 150)
+        .frame(width: 150, height: 160)
         .padding()
         .background(Color.white)
         .cornerRadius(12)
