@@ -80,7 +80,7 @@ struct FeatureButton: View {
                 .multilineTextAlignment(.center)
                 .foregroundColor(.gray)
         }
-        .frame(width: 160, height: 160) // Set fixed size for each box
+        .frame(width: 150, height: 160) // Set fixed size for each box
         .padding()
         .background(Color.white)
         .cornerRadius(12)
