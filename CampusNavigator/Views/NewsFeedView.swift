@@ -52,7 +52,7 @@ struct NewsFeedView: View {
                             .foregroundColor(NewsConstants.SystemLabelPrimary)
                         Spacer()
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 129)
                     .padding(.top, 8)
                     .padding(.bottom, 24)
                     

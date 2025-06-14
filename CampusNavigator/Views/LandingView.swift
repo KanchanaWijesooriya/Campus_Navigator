@@ -99,8 +99,6 @@ struct LandingView: View {
                 }
                 .padding(.top)
             }
-            .navigationTitle("Home")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
@@ -130,7 +128,7 @@ struct FeatureButton: View {
                 .foregroundColor(.gray)
                 .frame(maxHeight: 40) // prevents stretching from longer descriptions
         }
-        .frame(width: 150, height: 160)
+        .frame(width: 145, height: 155)
         .padding()
         .background(Color.white)
         .cornerRadius(12)

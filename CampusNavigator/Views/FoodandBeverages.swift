@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// MARK: - Data Model
+
 struct FoodItem: Identifiable, Codable, Hashable {
     let id: UUID
     let name: String
@@ -16,7 +16,7 @@ struct FoodItem: Identifiable, Codable, Hashable {
     var quantity: Int
 }
 
-// MARK: - Cart Manager with Persistence
+
 class CartManager: ObservableObject {
     @Published var items: [FoodItem] = [] {
         didSet {
@@ -60,7 +60,7 @@ class CartManager: ObservableObject {
     }
 }
 
-// MARK: - User Credits Manager
+
 class UserCreditsManager: ObservableObject {
     @Published var credits: Double {
         didSet {
@@ -87,7 +87,6 @@ class UserCreditsManager: ObservableObject {
     }
 }
 
-// MARK: - Cart View
 struct CartView: View {
     @ObservedObject var cartManager: CartManager
     @ObservedObject var creditsManager: UserCreditsManager
@@ -160,7 +159,7 @@ struct CartView: View {
     }
 }
 
-// MARK: - Main Menu View
+
 struct FoodBeveragesView: View {
     @ObservedObject var cartManager: CartManager
     @ObservedObject var creditsManager = UserCreditsManager()

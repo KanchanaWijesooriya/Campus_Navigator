@@ -44,7 +44,7 @@ struct ProfileView: View {
                         }
                         .offset(x: -10, y: -10)
                     }
-                    .padding(.top, 40)
+                    .padding(.top, 20)
 
                     // User Info
                     VStack(spacing: 12) {
@@ -55,10 +55,30 @@ struct ProfileView: View {
                         ProfileInfoCard(title: "Student Email", value: "john.doe@university.edu")
                     }
                     .padding(.horizontal)
+
+                    // Logout Button
+                    NavigationLink(destination: LoginView().navigationBarBackButtonHidden(true)) {
+                        Text("Log Out")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.red)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .padding(.horizontal)
+                    }
                 }
                 .padding(.bottom, 40)
             }
-            .navigationTitle("My Profile")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("My Profile")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.top, 8) // Increased padding above title
+                }
+            }
             .sheet(isPresented: $isImagePickerPresented) {
                 ImagePicker(image: $profileImage)
             }
@@ -66,7 +86,6 @@ struct ProfileView: View {
     }
 }
 
-// MARK: - Info Card View
 struct ProfileInfoCard: View {
     let title: String
     let value: String
@@ -87,7 +106,7 @@ struct ProfileInfoCard: View {
     }
 }
 
-// MARK: - Image Picker
+
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var image: UIImage?
 
@@ -117,7 +136,8 @@ struct ImagePicker: UIViewControllerRepresentable {
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
 
-            guard let provider = results.first?.itemProvider, provider.canLoadObject(ofClass: UIImage.self) else {
+            guard let provider = results.first?.itemProvider,
+                  provider.canLoadObject(ofClass: UIImage.self) else {
                 return
             }
 
@@ -130,10 +150,9 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
 }
 
+
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            ProfileView()
-        }
+        ProfileView()
     }
 }

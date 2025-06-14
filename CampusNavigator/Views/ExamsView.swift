@@ -49,12 +49,12 @@ struct ExamsAndResultsView: View {
                     }
                     
 //                    NavigationLink(destination: ){
-                        ExamCard(
-                            imageName: "ExamScheduleIcon",
-                            title: "Exam Schedule",
-                            subtitle: "View updated exam schedules",
-                            backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
-                        )
+//                        ExamCard(
+//                            imageName: "ExamScheduleIcon",
+//                            title: "Exam Schedule",
+//                            subtitle: "View updated exam schedules",
+//                            backgroundColor: Color(red: 0.85, green: 0.85, blue: 0.85)
+//                        )
 //                    }
                 }
                 .padding(.horizontal, 16)

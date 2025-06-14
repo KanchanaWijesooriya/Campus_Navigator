@@ -1,12 +1,12 @@
 import SwiftUI
 
-// MARK: - Constants
+
 struct Constants {
     static let LabelsPrimary: Color = .black
     static let newTextGray: Color = Color(red: 0.5, green: 0.51, blue: 0.57)
 }
 
-// MARK: - HomeView
+
 struct HomeView: View {
     var body: some View {
         NavigationStack {
@@ -70,7 +70,7 @@ struct HomeView: View {
     }
 }
 
-// MARK: - Feature Card
+
 struct FeatureCard: View {
     var iconName: String
     var title: String
@@ -110,7 +110,7 @@ struct FeatureCard: View {
     }
 }
 
-// MARK: - Bottom Tab Bar Icon
+
 struct TabBarIcon: View {
     var name: String
     var isSelected: Bool = false
@@ -127,7 +127,7 @@ struct TabBarIcon: View {
     }
 }
 
-// MARK: - Preview
+
 #Preview {
     HomeView()
 }

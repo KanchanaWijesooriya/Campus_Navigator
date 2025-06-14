@@ -9,15 +9,19 @@ import SwiftUI
 
 @main
 struct CampusNavigatorApp: App {
-    @State private var isLoggedIn = false
+//    @State private var isLoggedIn = false
     
     var body: some Scene {
         WindowGroup {
-            if isLoggedIn {
-                MainTabView()
-            } else {
-                LoginView(isLoggedIn: $isLoggedIn)
+//            if isLoggedIn {
+//                MainTabView()
+//            } else {
+//                LoginView(isLoggedIn: $isLoggedIn)
+//            }
+            NavigationStack{
+                LoginView()
             }
         }
+        
     }
 }
