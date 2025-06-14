@@ -1,99 +1,57 @@
 import SwiftUI
 
+struct ModuleResult: Identifiable {
+    let id = UUID()
+    let moduleName: String
+    let marks: Int
+}
+
 struct ExamResultsView: View {
-    let examResults = [
-        ExamResult(module: "PDSA 2", marks: 75),
-        ExamResult(module: "TSLE", marks: 84),
-        ExamResult(module: "Data Science", marks: 88),
-        ExamResult(module: "Cyber Security", marks: 75),
-        ExamResult(module: "DU", marks: 86),
-        ExamResult(module: "ECS", marks: 87),
-        ExamResult(module: "iOS", marks: nil),
-        ExamResult(module: "Web API", marks: nil)
+    let results = [
+        ModuleResult(moduleName: "Web API", marks: 85),
+        ModuleResult(moduleName: "Mobile App Development", marks: 90),
+        ModuleResult(moduleName: "Database Systems", marks: 78),
+        ModuleResult(moduleName: "Software Engineering", marks: 88),
+        ModuleResult(moduleName: "Cyber Security", marks: 67)
     ]
-    
+
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                headerSection
-                
-                resultsList
-                
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle("Exam Results")
-            .navigationBarTitleDisplayMode(.large)
-            .navigationBarBackButtonHidden(false)
-        }
-    }
-    
-    private var headerSection: some View {
-        HStack {
-            Text("MODULE")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .fontWeight(.medium)
-            
-            Spacer()
-            
-            Text("MARKS")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .fontWeight(.medium)
-        }
-        .padding(.horizontal, 16)
-        .padding(.top, 10)
-    }
-    
-    private var resultsList: some View {
-        VStack(spacing: 0) {
-            ForEach(Array(examResults.enumerated()), id: \.offset) { index, result in
-                ExamResultRow(result: result)
-                
-                if index < examResults.count - 1 {
-                    Divider()
-                        .padding(.leading, 16)
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Exam Results")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.horizontal)
+
+                // Table header
+                HStack {
+                    Text("Module")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("Marks")
+                        .font(.headline)
+                        .frame(width: 80, alignment: .trailing)
                 }
-            }
-        }
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
-    }
-}
+                .padding(.horizontal)
 
-struct ExamResultRow: View {
-    let result: ExamResult
-    
-    var body: some View {
-        HStack {
-            Text(result.module)
-                .font(.body)
-                .foregroundColor(.primary)
-            
-            Spacer()
-            
-            if let marks = result.marks {
-                Text("\(marks)")
-                    .font(.body)
-                    .foregroundColor(.primary)
-                    .fontWeight(.medium)
-            } else {
-                Text("-")
-                    .font(.body)
-                    .foregroundColor(.secondary)
+                // Table rows
+                List {
+                    ForEach(results) { result in
+                        HStack {
+                            Text(result.moduleName)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text("\(result.marks)%")
+                                .frame(width: 80, alignment: .trailing)
+                                .foregroundColor(result.marks >= 50 ? .green : .red)
+                        }
+                        .padding(.vertical, 8)
+                    }
+                }
+                .listStyle(.insetGrouped)
             }
+            .navigationBarHidden(true)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .contentShape(Rectangle())
     }
-}
-
-struct ExamResult {
-    let module: String
-    let marks: Int?
 }
 
 struct ExamResultsView_Previews: PreviewProvider {

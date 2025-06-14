@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ExamResultsView: View {
+struct UpcomingExamView: View {
     let examResults: [ExamResult] = [
         ExamResult(module: "PDSA 2", marks: 75),
         ExamResult(module: "TSLE", marks: 84),
@@ -128,8 +128,8 @@ struct ExamResult: Identifiable {
     let marks: Int?
 }
 
-struct ExamResultsView_Previews: PreviewProvider {
+struct UpcomingExamView_Previews: PreviewProvider {
     static var previews: some View {
-        ExamResultsView()
+        UpcomingExamView()
     }
 }
