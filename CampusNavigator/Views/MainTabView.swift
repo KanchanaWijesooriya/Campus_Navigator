@@ -20,7 +20,7 @@ struct MainTabView: View {
                     Label("My Events", systemImage: "calendar")
                 }
 
-            HomeView() // Or replace with ProfileView() if needed
+            LaningView() // Or replace with ProfileView() if needed
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
