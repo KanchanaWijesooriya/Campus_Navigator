@@ -71,7 +71,7 @@ class UserCreditsManager: ObservableObject {
     init() {
         self.credits = UserDefaults.standard.double(forKey: "user_credits")
         if credits == 0 {
-            credits = 50.00 // Initial credit
+            credits = 50.00// Initial credit
         }
     }
 
@@ -80,8 +80,7 @@ class UserCreditsManager: ObservableObject {
             credits -= amount
             return true
         }
-        return false
-    }
+        return false    }
 
     func add(_ amount: Double) {
         credits += amount
@@ -99,7 +98,7 @@ struct CartView: View {
 
     var body: some View {
         VStack {
-            Text("Credits: $\(creditsManager.credits, specifier: "%.2f")")
+            Text("Credits⭐: \(creditsManager.credits, specifier: "%.2f")")
                 .font(.subheadline)
                 .foregroundColor(.blue)
                 .padding(.top)

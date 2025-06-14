@@ -47,7 +47,7 @@ struct HomeView: View {
                 VStack(spacing: 16) {
                     FeatureCard(iconName: "map-icon", title: "View Campus Map", description: "Explore buildings, departments, and wayfinding.")
                     FeatureCard(iconName: "crowd-icon", title: "Check Crowd Levels", description: "Live density data for libraries, cafeterias, gyms.")
-                    FeatureCard(iconName: "reserve-icon", title: "Reserve a Space", description: "Book study rooms, labs, parking slots.")
+                    FeatureCard(iconName: "reserve-icon", title: "Reserve a Space", description: "Book study rooms, labs, .")
                     FeatureCard(iconName: "timetable-icon", title: "My Timetable", description: "Explore buildings, departments, and wayfinding.")
                     FeatureCard(iconName: "exam-icon", title: "Exams and Results", description: "Repeat exams, module results, and upcoming exams.")
                 }
