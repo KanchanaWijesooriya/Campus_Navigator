@@ -83,7 +83,7 @@ struct LandingView: View {
                                 FeatureButton(
                                     title: "Exams and Results",
                                     iconName: "exam-icon",
-                                    description: "Check your results and exam schedules."
+                                    description: "Check your results and lecture schedules."
                                 )
                             }
                         }
